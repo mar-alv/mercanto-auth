@@ -15,8 +15,8 @@ const architectsDaughter = Architects_Daughter({
 
 export default function SignUp() {
   return (
-		<div className='h-svh p-6 gap-32 flex bg-gray-50 overflow-hidden dark:bg-gray-900'>
-			<main className='text-gray-900 dark:text-gray-100'>
+		<div className='h-svh p-6 gap-10 grid justify-content-center sm:grid-cols-[auto_auto] bg-gray-50 overflow-hidden dark:bg-gray-900'>
+			<main className='sm:justify-self-center text-gray-900 dark:text-gray-100'>
 				<Link href='/' className={clsx(architectsDaughter.className, 'text-2xl font-bold hover:text-rose-600')}>mercanto</Link>
 
 				<div className='h-full gap-6 flex flex-col justify-center'>
@@ -72,7 +72,7 @@ export default function SignUp() {
 				width={16}
 				height={9}
 				layout='responsive'
-				className='hidden md:block rounded-3xl object-cover dark:opacity-75'
+				className='max-w-[756px] max-h-[670px] hidden self-center sm:block rounded-3xl object-cover dark:opacity-75'
 			/>
 		</div>
   )
