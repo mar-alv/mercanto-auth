@@ -8,6 +8,10 @@ import Link from 'next/link'
 import { SsoButton } from '@/components/sso-button'
 import { Logo } from '@/components/logo'
 
+export const metadata: Metadata = {
+  title: 'Create your account',
+}
+
 export default function SignUp() {
   return (
 		<div className='h-svh p-6 gap-10 grid justify-content-center sm:grid-cols-[auto_auto] bg-gray-50 overflow-hidden dark:bg-gray-900'>
@@ -49,15 +53,21 @@ export default function SignUp() {
 								Name
 							</Form.Label>
 
-							<Form.Control type='text' className='w-full rounded-[4px] outline outline-1 outline-gray-500 focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100 peer' />
+							<Form.Control
+								type='text'
+								className={clsx(
+									'w-full rounded-[4px] outline outline-1 outline-gray-500 peer',
+									'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100'
+								)}
+							/>
 						</Form.Field>
 
-						<Form.Submit>
+						<Form.Submit className='py-2 rounded-lg text-white bg-red-400 hover:bg-rose-600'>
 							Sign up
 						</Form.Submit>
 					</Form.Root>
 
-					<span>Already have an account? <Link href='/sign-in' className='text-rose-400 font-bold underline hover:text-rose-600'>Sign in</Link> </span>
+					<span className='text-center'>Already have an account? <Link href='/sign-in' className='text-rose-400 font-bold underline hover:text-rose-600'>Sign in</Link> </span>
 				</div>
 			</main>
 
