@@ -1,12 +1,14 @@
-import { clsx } from 'clsx'
-import * as Form from '@radix-ui/react-form'
 import { AppleLogo, GoogleLogo, MetaLogo } from '@phosphor-icons/react/dist/ssr'
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { Metadata } from 'next'
 
-import { SsoButton } from '@/components/sso-button'
+import { signUp } from './actions'
+
 import { Logo } from '@/components/logo'
+import { SignUpForm } from '@/components/sign-up-form'
+import { SsoButton } from '@/components/sso-button'
 
 export const metadata: Metadata = {
   title: 'Create your account',
@@ -47,25 +49,7 @@ export default function SignUp() {
 						<hr className='w-full border-gray-300 dark:border-gray-100' />
 					</div>
 
-					<Form.Root className='grid gap-3'>
-						<Form.Field name='name' className='grid gap-2'>
-							<Form.Label className='text-xs peer-focus:font-bold'>
-								Name
-							</Form.Label>
-
-							<Form.Control
-								type='text'
-								className={clsx(
-									'w-full rounded-[4px] outline outline-1 outline-gray-500 peer',
-									'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100'
-								)}
-							/>
-						</Form.Field>
-
-						<Form.Submit className='py-2 rounded-lg text-white bg-red-400 hover:bg-rose-600'>
-							Sign up
-						</Form.Submit>
-					</Form.Root>
+					<SignUpForm signUp={signUp} />
 
 					<span className='text-center'>Already have an account? <Link href='/sign-in' className='text-rose-400 font-bold underline hover:text-rose-600'>Sign in</Link> </span>
 				</div>
