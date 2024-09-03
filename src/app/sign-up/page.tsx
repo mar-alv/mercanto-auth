@@ -2,22 +2,17 @@ import { clsx } from 'clsx'
 import * as Form from '@radix-ui/react-form'
 import { AppleLogo, GoogleLogo, MetaLogo } from '@phosphor-icons/react/dist/ssr'
 
-import { Architects_Daughter } from 'next/font/google'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { SsoButton } from '@/components/sso-button'
-
-const architectsDaughter = Architects_Daughter({
-	weight: '400',
-	subsets: ['latin']
-})
+import { Logo } from '@/components/logo'
 
 export default function SignUp() {
   return (
 		<div className='h-svh p-6 gap-10 grid justify-content-center sm:grid-cols-[auto_auto] bg-gray-50 overflow-hidden dark:bg-gray-900'>
 			<main className='sm:justify-self-center text-gray-900 dark:text-gray-100'>
-				<Link href='/' className={clsx(architectsDaughter.className, 'text-2xl font-bold hover:text-rose-600')}>mercanto</Link>
+				<Logo />
 
 				<div className='h-full gap-6 flex flex-col justify-center'>
 					<div className='gap-1 grid'>
