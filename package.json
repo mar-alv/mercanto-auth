@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
     "@phosphor-icons/react": "^2.1.7",
     "@radix-ui/react-form": "^0.1.0",
     "clsx": "^2.1.1",
