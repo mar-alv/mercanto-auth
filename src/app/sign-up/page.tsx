@@ -61,7 +61,7 @@ export default function SignUp() {
 				width={16}
 				height={9}
 				layout='responsive'
-				className='max-w-[756px] max-h-[670px] hidden self-center sm:block rounded-3xl object-cover dark:opacity-75'
+				className='max-w-[756px] max-h-[638px] hidden self-center sm:block rounded-3xl object-cover dark:opacity-75'
 			/>
 		</div>
   )
