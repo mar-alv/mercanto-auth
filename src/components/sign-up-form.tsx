@@ -3,40 +3,33 @@
 import clsx from 'clsx'
 import * as Form from '@radix-ui/react-form'
 
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useFormState } from 'react-dom'
 
 interface Props {
-  signUp(data: FormData): Promise<void>
+	signUp(prevState: SignUpState, formData: FormData): Promise<any>
 }
 
-const signUpSchema = z.object({
-  firstName: z.string().min(1).regex(/\S+/),
-  lastName: z.string().min(1).regex(/\S+/),
-	email: z.string().email()
-})
-
-type SignUpSchema = z.infer<typeof signUpSchema>
+interface SignUpState {
+	errors: {
+		firstName: boolean
+		lastName: boolean
+		email: boolean
+	}
+}
 
 export function SignUpForm({ signUp }: Props) {
-  const { register, handleSubmit, formState: { errors } } = useForm<SignUpSchema>({
-    resolver: zodResolver(signUpSchema),
-    mode: 'onBlur'
-  })
+  const [state, dispatch, isPending] = useFormState(signUp, {
+		errors: {
+			firstName: false,
+			lastName: false,
+			email: false
+		}
+	})
 
-  async function onSubmit(data: SignUpSchema) {
-    const formData = new FormData()
-
-    formData.append('firstName', data.firstName)
-    formData.append('lastName', data.lastName)
-    formData.append('email', data.email)
-
-		await signUp(formData)
-  }
+	console.log(isPending)
 
   return (
-    <Form.Root onSubmit={handleSubmit(onSubmit)} className='gap-3 grid'>
+    <Form.Root action={dispatch} className='gap-3 grid'>
 			<div className='gap-3 grid grid-cols-2'>
 				<Form.Field name='firstName' className='gap-2 grid content-start'>
 					<Form.Label className='justify-self-start text-xs peer-focus:font-bold'>
@@ -51,14 +44,13 @@ export function SignUpForm({ signUp }: Props) {
 						type='text'
 						className={clsx(
 							'w-full p-2 rounded-[4px] outline outline-1 outline-gray-500 text-gray-900 peer',
-							errors.firstName && 'outline-[3px] outline-rose-600',
+							state.errors.firstName && 'outline-[3px] outline-rose-600',
 							'placeholder:text-gray-300',
 							'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100'
 						)}
-						{...register('firstName')}
 					/>
 
-					{errors.firstName && (
+					{state.errors.firstName && (
 						<Form.Message className='text-rose-600'>
 							Please enter your first name.
 						</Form.Message>
@@ -78,14 +70,13 @@ export function SignUpForm({ signUp }: Props) {
 						type='text'
 						className={clsx(
 							'w-full p-2 rounded-[4px] outline outline-1 outline-gray-500 text-gray-900 peer',
-							errors.lastName && 'outline-[3px] outline-rose-600',
+							state.errors.lastName && 'outline-[3px] outline-rose-600',
 							'placeholder:text-gray-300',
 							'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100'
 						)}
-						{...register('lastName')}
 					/>
 
-					{errors.lastName && (
+					{state.errors.lastName && (
 						<Form.Message className='text-rose-600'>
 							Please enter your last name.
 						</Form.Message>
@@ -106,14 +97,13 @@ export function SignUpForm({ signUp }: Props) {
 					type='email'
 					className={clsx(
 						'w-full p-2 rounded-[4px] outline outline-1 outline-gray-500 text-gray-900 peer',
-						errors.email && 'outline-[3px] outline-rose-600',
+						state.errors.email && 'outline-[3px] outline-rose-600',
 						'placeholder:text-gray-300',
 						'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100'
 					)}
-					{...register('email')}
 				/>
 
-				{errors.email && (
+				{state.errors.email && (
 					<Form.Message className='text-rose-600'>
 						Please enter your email.
 					</Form.Message>
