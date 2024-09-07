@@ -6,7 +6,7 @@ import * as Form from '@radix-ui/react-form'
 import { useFormState } from 'react-dom'
 
 interface Props {
-	signUp(prevState: SignUpState, formData: FormData): Promise<any>
+	signUp(prevState: SignUpState, formData: FormData): Promise<SignUpState>
 }
 
 interface SignUpState {
@@ -18,7 +18,7 @@ interface SignUpState {
 }
 
 export function SignUpForm({ signUp }: Props) {
-  const [state, dispatch, isPending] = useFormState(signUp, {
+  const [state, dispatch] = useFormState(signUp, {
 		errors: {
 			firstName: false,
 			lastName: false,
@@ -26,31 +26,28 @@ export function SignUpForm({ signUp }: Props) {
 		}
 	})
 
-	console.log(isPending)
-
   return (
     <Form.Root action={dispatch} className='gap-3 grid'>
 			<div className='gap-3 grid grid-cols-2'>
 				<Form.Field name='firstName' className='gap-2 grid content-start'>
-					<Form.Label className='justify-self-start text-xs peer-focus:font-bold'>
+					<Form.Label className='justify-self-start text-xs data-[invalid=true]:text-rose-600'>
 						First Name
 					</Form.Label>
 
 					<Form.Control
-						minLength={1}
-						maxLength={150}
 						placeholder='John'
 						required
 						type='text'
 						className={clsx(
 							'w-full p-2 rounded-[4px] outline outline-1 outline-gray-500 text-gray-900 peer',
+							'data-[invalid=true]:outline-[3px] data-[invalid=true]:outline-rose-600',
 							state.errors.firstName && 'outline-[3px] outline-rose-600',
 							'placeholder:text-gray-300',
-							'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100'
+							'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100 dark:placeholder:text-gray-400 dark:bg-gray-200'
 						)}
 					/>
 
-					{state.errors.firstName && (
+					{state.errors.firstName && ( 
 						<Form.Message className='text-rose-600'>
 							Please enter your first name.
 						</Form.Message>
@@ -58,21 +55,20 @@ export function SignUpForm({ signUp }: Props) {
 				</Form.Field>
 
 				<Form.Field name='lastName' className='gap-2 grid content-start'>
-					<Form.Label className='justify-self-start text-xs peer-focus:font-bold'>
+					<Form.Label className='justify-self-start text-xs data-[invalid=true]:text-rose-600'>
 						Last Name
 					</Form.Label>
 
 					<Form.Control
-						minLength={1}
-						maxLength={150}
 						placeholder='Doe'
 						required
 						type='text'
 						className={clsx(
 							'w-full p-2 rounded-[4px] outline outline-1 outline-gray-500 text-gray-900 peer',
+							'data-[invalid=true]:outline-[3px] data-[invalid=true]:outline-rose-600',
 							state.errors.lastName && 'outline-[3px] outline-rose-600',
 							'placeholder:text-gray-300',
-							'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100'
+							'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100 dark:placeholder:text-gray-400 dark:bg-gray-200'
 						)}
 					/>
 
@@ -82,24 +78,23 @@ export function SignUpForm({ signUp }: Props) {
 						</Form.Message>
 					)}
 				</Form.Field>
-
 			</div>
 
 			<Form.Field name='email' className='gap-2 grid content-start'>
-				<Form.Label className='justify-self-start text-xs peer-focus:font-bold'>
+				<Form.Label className='justify-self-start text-xs data-[invalid=true]:text-rose-600'>
 					Email
 				</Form.Label>
 
 				<Form.Control
-					maxLength={150}
 					placeholder='johndoe@mail.com'
 					required
 					type='email'
 					className={clsx(
 						'w-full p-2 rounded-[4px] outline outline-1 outline-gray-500 text-gray-900 peer',
+						'data-[invalid=true]:outline-[3px] data-[invalid=true]:outline-rose-600',
 						state.errors.email && 'outline-[3px] outline-rose-600',
 						'placeholder:text-gray-300',
-						'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100'
+						'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100 dark:placeholder:text-gray-400 dark:bg-gray-200'
 					)}
 				/>
 
@@ -110,9 +105,9 @@ export function SignUpForm({ signUp }: Props) {
 				)}
 			</Form.Field>
 
-      <Form.Submit className='py-2 rounded-lg text-white bg-red-400 hover:bg-rose-600'>
-        Sign up
-      </Form.Submit>
+			<Form.Submit className='py-2 rounded-lg text-white bg-red-400 hover:bg-rose-600'>
+				Sign up
+			</Form.Submit>
     </Form.Root>
   )
 }

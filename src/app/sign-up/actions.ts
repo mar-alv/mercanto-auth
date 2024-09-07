@@ -10,10 +10,12 @@ interface SignUpState {
 	}
 }
 
+const nameRegex = /^(?!.*\s{2,})[a-zA-ZÀ-ÖØ-ÿĀ-ſǄ-ɏʜ-ʯʼ˥˧ʽ˯\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]+(?:[\s]+[a-zA-ZÀ-ÖØ-ÿĀ-ſǄ-ɏʜ-ʯʼ˥˧ʽ˯\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]+)*$/;
+
 const signUpSchema = z.object({
-  firstName: z.string().min(1).regex(/\S+/),
-  lastName: z.string().min(1).regex(/\S+/),
-	email: z.string().email()
+  firstName: z.string().min(1).max(150).regex(nameRegex),
+  lastName: z.string().min(1).max(150).regex(nameRegex),
+	email: z.string().max(50).email()
 })
 
 export async function signUp(prevState: SignUpState, formData: FormData) {
@@ -23,11 +25,27 @@ export async function signUp(prevState: SignUpState, formData: FormData) {
 	const lastName = formData.get('lastName') as string
 	const email = formData.get('email') as string
 
-  const firstNameValidation = signUpSchema.safeParse(firstName)
+	const signUpValidation = signUpSchema.safeParse({
+		firstName,
+		lastName,
+		email
+	})
 
-	if (firstNameValidation.error) {
-		prevState.errors.firstName = true
+	if (signUpValidation.error) {
+		const fieldWithErrors = signUpValidation.error.errors.map(errors => {
+			return errors.path[0]
+		})
+
+		return {
+			errors: {
+				firstName: fieldWithErrors.includes('firstName'),
+				lastName: fieldWithErrors.includes('lastName'),
+				email: fieldWithErrors.includes('email')
+			}
+		}
 	}
+
+	// TODO: request for sign up
 
 	return prevState
 }
