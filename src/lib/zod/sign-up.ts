@@ -13,7 +13,10 @@ export const signUpSchema = z.object({
     .regex(nameRegex, 'Last name contains invalid characters.'),
   email: z.string()
     .max(50, 'Email cannot exceed 50 characters.')
-    .email('Please enter a valid email address.')
+    .email('Please enter a valid email address.'),
+	birthDate: z.date({
+    required_error: "A date of birth is required.",
+  })
 })
 
 export type SignUpSchema = z.infer<typeof signUpSchema>

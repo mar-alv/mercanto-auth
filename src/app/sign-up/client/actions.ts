@@ -8,12 +8,16 @@ export async function signUp(_: null, formData: FormData) {
 	const firstName = formData.get('firstName') as string
 	const lastName = formData.get('lastName') as string
 	const email = formData.get('email') as string
+	const birthDate = formData.get('birthDate') as string
 
 	const signUpValidation = signUpSchema.safeParse({
 		firstName,
 		lastName,
-		email
+		email,
+		birthDate
 	})
+
+	console.log(birthDate)
 
 	if (signUpValidation.error) {
 		// TODO: show error toast
