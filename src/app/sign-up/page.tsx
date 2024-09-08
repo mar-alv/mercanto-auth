@@ -20,6 +20,8 @@ export default function SignUp() {
 			<main className='sm:justify-self-center text-gray-900 dark:text-gray-100'>
 				<Logo />
 
+				{/*TODO: link to return to /sign-up, to choose between new user or seller*/}
+
 				<div className='h-full gap-6 flex flex-col justify-center'>
 					<div className='gap-1 grid'>
 						<h1 className='text-3xl font-bold'>
