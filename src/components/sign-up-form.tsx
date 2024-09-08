@@ -6,19 +6,12 @@ import * as Form from '@radix-ui/react-form'
 import Link from 'next/link'
 
 import { useFormState } from 'react-dom'
-import { z } from 'zod'
+
+import { signUpSchema } from '@/lib/zod'
 
 interface Props {
 	signUp(_: null, formData: FormData): Promise<null>
 }
-
-const nameRegex = /^(?!.*\s{2,})[a-zA-ZÀ-ÖØ-ÿĀ-ſǄ-ɏʜ-ʯʼ˥˧ʽ˯\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]+(?:[\s]+[a-zA-ZÀ-ÖØ-ÿĀ-ſǄ-ɏʜ-ʯʼ˥˧ʽ˯\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]+)*$/;
-
-const signUpSchema = z.object({
-  firstName: z.string().min(1).max(150).regex(nameRegex),
-  lastName: z.string().min(1).max(150).regex(nameRegex),
-	email: z.string().max(50).email()
-})
 
 export function SignUpForm({ signUp }: Props) {
   const [, dispatch] = useFormState(signUp, null)

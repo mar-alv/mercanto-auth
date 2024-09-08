@@ -1,7 +1,5 @@
 'use server'
 
-import { z } from 'zod'
-
 import { signUpSchema } from '@/lib/zod'
 
 export async function signUp(_: null, formData: FormData) {
