@@ -1,4 +1,4 @@
-import { AppleLogo, ArrowLeft, GoogleLogo, MetaLogo } from '@phosphor-icons/react/dist/ssr'
+import { AppleLogo, GoogleLogo, MetaLogo } from '@phosphor-icons/react/dist/ssr'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -6,9 +6,9 @@ import { Metadata } from 'next'
 
 import { signUp } from './actions'
 
+import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/logo'
 import { SignUpForm } from '@/components/sign-up-form'
-import { SsoButton } from '@/components/sso-button'
 
 export const metadata: Metadata = {
   title: 'Create your account'
@@ -21,11 +21,9 @@ export default function SignUp() {
 				<div className='flex justify-between'>
 					<Logo />
 
-					<Link href='/sign-up' className='gap-1 flex items-center text-rose-400 font-bold underline hover:text-rose-600'>
-						<ArrowLeft />
-
-						Go back
-					</Link>
+					<Button asChild variant='link'>
+						<Link href='/sign-in'>Sign in</Link>
+					</Button>
 				</div>
 
 				<div className='h-full gap-6 flex flex-col justify-center'>
@@ -40,15 +38,15 @@ export default function SignUp() {
 					</div>
 
 					<div className='gap-1 grid grid-cols-3'>
-						<SsoButton>
+						<Button variant='outline'>
 							<GoogleLogo />
-						</SsoButton>
-						<SsoButton>
+						</Button>
+						<Button variant='outline'>
 							<MetaLogo />
-						</SsoButton>
-						<SsoButton>
+						</Button>
+						<Button variant='outline'>
 							<AppleLogo />
-						</SsoButton>
+						</Button>
 					</div>
 
 					<div className='gap-2 flex items-center'>
@@ -58,20 +56,15 @@ export default function SignUp() {
 					</div>
 
 					<SignUpForm signUp={signUp} />
-
-					<span className='text-center'>
-						Already have an account? <Link href='/sign-in' className='text-rose-400 font-bold underline hover:text-rose-600'>Sign in</Link>
-					</span>
 				</div>
 			</main>
 
 			<Image
 				src='/bg-sign-up.jpg'
 				alt='Grayscale image of people walking down a street and having lunch, with a large, bright yellow SALE text dominating the scene, reflected as if in a store window.'
-				width={16}
-				height={9}
-				layout='responsive'
-				className='max-w-[756px] max-h-[638px] hidden self-center sm:block rounded-3xl object-cover dark:opacity-75'
+				width={756}
+				height={670}
+				className='max-h-[670px] hidden self-center sm:block rounded-3xl object-cover dark:opacity-75'
 			/>
 		</div>
   )

@@ -1,6 +1,6 @@
 'use server'
 
-import { signUpSchema } from '@/lib/zod'
+import { signUpSchema } from '@/lib/zod/sign-up'
 
 export async function signUp(_: null, formData: FormData) {
 	await new Promise((resolve) => setTimeout(resolve, 2000))

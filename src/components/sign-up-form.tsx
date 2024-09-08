@@ -1,13 +1,23 @@
 'use client'
 
-import clsx from 'clsx'
-import * as Form from '@radix-ui/react-form'
-
 import Link from 'next/link'
 
+import { useForm } from "react-hook-form"
 import { useFormState } from 'react-dom'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-import { signUpSchema } from '@/lib/zod'
+import { Button } from '@/components/ui/button'
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel, 
+	FormMessage
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+
+import { signUpSchema, SignUpSchema } from '@/lib/zod/sign-up'
 
 interface Props {
 	signUp(_: null, formData: FormData): Promise<null>
@@ -16,125 +26,102 @@ interface Props {
 export function SignUpForm({ signUp }: Props) {
   const [, dispatch] = useFormState(signUp, null)
 
-	function firstNameValidation(value: string) {
-		const schema = signUpSchema.pick({ firstName: true })
-		const validation = schema.safeParse({
-			firstName: value
-		})
-
-		return !validation.success
-	}
-
-	function lastNameValidation(value: string) {
-		const schema = signUpSchema.pick({ lastName: true })
-		const validation = schema.safeParse({
-			lastName: value
-		})
-
-		return !validation.success
-	}
-
-	function emailValidation(value: string) {
-		const schema = signUpSchema.pick({ email: true })
-		const validation = schema.safeParse({
-			email: value
-		})
-
-		return !validation.success
-	}
+	const form = useForm<SignUpSchema>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+			firstName: '',
+			lastName: '',
+			email: ''
+    }
+  })
 
   return (
-    <Form.Root action={dispatch} className='gap-3 grid'>
-			<div className='gap-3 grid grid-cols-2'>
-				<Form.Field name='firstName' className='gap-2 grid content-start'>
-					<Form.Label className='justify-self-start text-xs data-[invalid=true]:text-rose-600'>
-						First Name
-					</Form.Label>
+    <Form {...form}>
+			<form action={dispatch} className='gap-3 grid'>
+				<div className='gap-3 grid grid-cols-2'>
+					<FormField
+						control={form.control}
+						name='firstName'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>
+									First Name
+								</FormLabel>
 
-					<Form.Control
-						minLength={1}
-						maxLength={150}
-						placeholder='John'
-						required
-						type='text'
-						className={clsx(
-							'w-full p-2 rounded-[4px] outline outline-1 outline-gray-500 text-gray-900 peer',
-							'data-[invalid=true]:outline-[3px] data-[invalid=true]:outline-rose-600',
-							'placeholder:text-gray-300',
-							'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100 dark:placeholder:text-gray-400 dark:bg-gray-200'
+								<FormControl>
+									<Input
+										placeholder='John'
+										type='text'
+										{...field}
+									/>
+								</FormControl>
+
+								<FormMessage />
+							</FormItem>
 						)}
 					/>
 
-					<Form.Message match={firstNameValidation} className='text-rose-600'>
-						Please enter your first name.
-					</Form.Message>
-				</Form.Field>
+					<FormField
+						control={form.control}
+						name='lastName'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>
+									Last Name
+								</FormLabel>
 
-				<Form.Field name='lastName' className='gap-2 grid content-start'>
-					<Form.Label className='justify-self-start text-xs data-[invalid=true]:text-rose-600'>
-						Last Name
-					</Form.Label>
+								<FormControl>
+									<Input
+										placeholder='Doe'
+										type='text'
+										{...field}
+									/>
+								</FormControl>
 
-					<Form.Control
-						minLength={1}
-						maxLength={150}
-						placeholder='Doe'
-						required
-						type='text'
-						className={clsx(
-							'w-full p-2 rounded-[4px] outline outline-1 outline-gray-500 text-gray-900 peer',
-							'data-[invalid=true]:outline-[3px] data-[invalid=true]:outline-rose-600',
-							'placeholder:text-gray-300',
-							'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100 dark:placeholder:text-gray-400 dark:bg-gray-200'
+								<FormMessage />
+							</FormItem>
 						)}
 					/>
+				</div>
 
-					<Form.Message match={lastNameValidation} className='text-rose-600'>
-						Please enter your last name.
-					</Form.Message>
-				</Form.Field>
-			</div>
+				<FormField
+					control={form.control}
+					name='email'
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>
+								Email
+							</FormLabel>
 
-			<Form.Field name='email' className='gap-2 grid content-start'>
-				<Form.Label className='justify-self-start text-xs data-[invalid=true]:text-rose-600'>
-					Email
-				</Form.Label>
+							<FormControl>
+								<Input
+									placeholder='johndoe@mail.com'
+									type='email'
+									{...field}
+								/>
+							</FormControl>
 
-				<Form.Control
-					minLength={1}
-					maxLength={50}
-					placeholder='johndoe@mail.com'
-					required
-					type='text'
-					className={clsx(
-						'w-full p-2 rounded-[4px] outline outline-1 outline-gray-500 text-gray-900 peer',
-						'data-[invalid=true]:outline-[3px] data-[invalid=true]:outline-rose-600',
-						'placeholder:text-gray-300',
-						'focus:outline-2 focus:outline-gray-900 dark:focus:outline-offset-2 dark:focus:outline-gray-100 dark:placeholder:text-gray-400 dark:bg-gray-200'
+							<FormMessage />
+						</FormItem>
 					)}
 				/>
 
-				<Form.Message match={emailValidation} className='text-rose-600'>
-					Please enter your email.
-				</Form.Message>
-			</Form.Field>
-
-			<Form.Field name='terms' className='gap-2 flex justify-center'>
-				<Form.Control
-					required
-					type='checkbox'
-					className='cursor-pointer data-[valid=true]:accent-rose-400'
-				/>
+				<Button type='submit' className='py-2 rounded-lg text-white bg-red-400 hover:bg-rose-600'>
+					Sign up
+				</Button>
 
 				{/*TODO: create terms and conditions page*/}
-				<Form.Label className='my-2 justify-self-start text-xs cursor-pointer'>
-					I have read and agree to the <Link href='/' target='_blank' className='text-rose-400 font-bold underline hover:text-rose-600'>Terms and Conditions</Link> and <Link href='/' target='_blank' className='text-rose-400 font-bold underline hover:text-rose-600'>Privacy Policy</Link>.
-				</Form.Label>
-			</Form.Field>
-
-			<Form.Submit className='py-2 rounded-lg text-white bg-red-400 hover:bg-rose-600'>
-				Sign up
-			</Form.Submit>
-    </Form.Root>
+				<p className='text-center'>
+					By clicking &quot;Sign Up&quot;, you agree to our
+					<Button asChild variant='link' className='px-1'>
+						<Link href='/'>Terms of Service</Link>
+					</Button>
+					and
+					<Button asChild variant='link' className='px-1'>
+						<Link href='/'>Privacy Policy</Link>
+					</Button>.
+				</p>
+			</form>
+    </Form>
   )
 }
