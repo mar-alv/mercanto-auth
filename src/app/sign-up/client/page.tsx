@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function SignUp() {
   return (
-		<div className='h-svh p-6 gap-10 grid justify-content-center sm:grid-cols-[auto_auto] bg-gray-50 overflow-hidden dark:bg-gray-900'>
+		<div className='h-svh p-6 gap-10 grid justify-content-center sm:grid-cols-[auto_auto] bg-gray-50 dark:bg-gray-900'>
 			<main className='sm:justify-self-center text-gray-900 dark:text-gray-100'>
 				<div className='flex justify-between'>
 					<Logo />

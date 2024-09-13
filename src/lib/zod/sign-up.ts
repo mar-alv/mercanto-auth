@@ -14,8 +14,9 @@ export const signUpSchema = z.object({
   email: z.string()
     .max(50, 'Email cannot exceed 50 characters.')
     .email('Please enter a valid email address.'),
+	// TODO: Add validations for invalid birth date, prior to 1900 and not being 13 years old
 	birthDate: z.date({
-    required_error: "A date of birth is required.",
+    required_error: 'A date of birth is required.',
   })
 })
 

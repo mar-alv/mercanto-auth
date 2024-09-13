@@ -1,6 +1,8 @@
 'use client'
 
 import { CalendarIcon } from '@radix-ui/react-icons'
+import { Check, ChevronsUpDown } from 'lucide-react'
+import getUnicodeFlagIcon from 'country-flag-icons/unicode'
 
 import { format } from 'date-fns'
 
@@ -8,14 +10,24 @@ import Link from 'next/link'
 
 import { useForm } from 'react-hook-form'
 import { useFormState } from 'react-dom'
+import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { cn } from '@/lib/utils'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@/components/ui/command'
+import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel, 
@@ -28,7 +40,8 @@ import {
 	PopoverTrigger
 } from '@/components/ui/popover'
 
-import { cn } from '@/lib/utils'
+import { i18nIsoCountries } from '@/lib/i18n-iso-countries'
+import { libPhoneNumber } from '@/lib/lib-phone-number'
 import { signUpSchema, SignUpSchema } from '@/lib/zod/sign-up'
 
 interface Props {
@@ -36,6 +49,9 @@ interface Props {
 }
 
 export function SignUpForm({ signUp }: Props) {
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState('')
+
   const [, dispatch] = useFormState(signUp, null)
 
 	const form = useForm<SignUpSchema>({
@@ -43,7 +59,8 @@ export function SignUpForm({ signUp }: Props) {
     defaultValues: {
 			firstName: '',
 			lastName: '',
-			email: ''
+			email: '',
+			birthDate: null
     }
   })
 
@@ -184,7 +201,55 @@ export function SignUpForm({ signUp }: Props) {
 						)}
 					/>
 
-					{/*TODO: phone number field*/}
+					<div>
+						<Popover open={open} onOpenChange={setOpen}>
+							<PopoverTrigger asChild>
+								<Button
+									variant='outline'
+									role='combobox'
+									aria-expanded={open}
+									className='w-[200px] justify-between'
+								>
+									{/*TODO: default value will be current location flag*/}
+									{value
+										? getUnicodeFlagIcon(libPhoneNumber.countries.find((country) => country === value) ?? 'US')
+										: getUnicodeFlagIcon('US')}
+									<ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+								</Button>
+							</PopoverTrigger>
+
+							<PopoverContent className='w-[200px] p-0'>
+								<Command>
+									<CommandInput placeholder='Search framework...' />
+									<CommandList>
+										<CommandEmpty>Country not found.</CommandEmpty>
+
+										<CommandGroup>
+											{libPhoneNumber.countries.map((country) => (
+												<CommandItem
+													key={country}
+													value={country}
+													onSelect={(currentValue) => {
+														setValue(currentValue === value ? '' : currentValue)
+														setOpen(false)
+													}}
+												>
+													<Check
+														className={cn(
+															'mr-2 h-4 w-4',
+															value === country ? 'opacity-100' : 'opacity-0'
+														)}
+													/>
+													{getUnicodeFlagIcon(country)}
+													{i18nIsoCountries.getCountryName(country)}
+												</CommandItem>
+											))}
+										</CommandGroup>
+									</CommandList>
+								</Command>
+							</PopoverContent>
+						</Popover>
+					</div>
 				</div>
 
 				<Button type='submit' className='py-2 rounded-lg text-white bg-red-400 hover:bg-rose-600'>
