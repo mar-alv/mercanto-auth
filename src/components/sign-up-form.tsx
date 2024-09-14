@@ -158,7 +158,7 @@ export function SignUpForm() {
 									<PopoverTrigger asChild>
 										<FormControl>
 											<Button
-												variant='outline'
+												variant='outline-secondary'
 												className={cn(
 													'pl-3 text-left font-normal',
 													!field.value && 'text-muted-foreground'
@@ -212,7 +212,7 @@ export function SignUpForm() {
 									<Popover open={isPhoneNumberModalOpen} onOpenChange={setIsPhoneNumberModalOpen}>
 										<PopoverTrigger asChild>
 											<Button
-												variant='outline'
+												variant='outline-secondary'
 												role='combobox'
 												aria-expanded={isPhoneNumberModalOpen}
 												className='gap-1 flex items-center border-r-0 rounded-r-none focus:bg-accent'

@@ -7,6 +7,7 @@ import { Metadata } from 'next'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/logo'
 import { SignUpForm } from '@/components/sign-up-form'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 export const metadata: Metadata = {
   title: 'Create your account'
@@ -16,8 +17,13 @@ export default function SignUp() {
   return (
 		<div className='h-svh p-6 gap-10 grid justify-content-center sm:grid-cols-[auto_auto] bg-gray-50 dark:bg-gray-900'>
 			<main className='sm:justify-self-center text-gray-900 dark:text-gray-100'>
+				{/*TODO: Turn into a header component*/}
 				<div className='flex justify-between'>
 					<Logo />
+
+					<ThemeToggle />
+
+					{/*TODO: Add language select component*/}
 
 					<Button asChild variant='link'>
 						<Link href='/sign-in'>Sign in</Link>
@@ -36,13 +42,13 @@ export default function SignUp() {
 					</div>
 
 					<div className='gap-1 grid grid-cols-3'>
-						<Button variant='outline'>
+						<Button variant='outline-secondary'>
 							<GoogleLogo />
 						</Button>
-						<Button variant='outline'>
+						<Button variant='outline-secondary'>
 							<MetaLogo />
 						</Button>
-						<Button variant='outline'>
+						<Button variant='outline-secondary'>
 							<AppleLogo />
 						</Button>
 					</div>
