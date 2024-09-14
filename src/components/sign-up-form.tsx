@@ -1,7 +1,7 @@
 'use client'
 
 import { CalendarIcon } from '@radix-ui/react-icons'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { Check, ChevronDown, ChevronsUpDown } from 'lucide-react'
 import getUnicodeFlagIcon from 'country-flag-icons/unicode'
 
 import { format } from 'date-fns'
@@ -13,7 +13,8 @@ import { useFormState } from 'react-dom'
 import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { cn } from '@/lib/utils'
+import { signUp } from '@/app/sign-up/client/actions'
+import { signUpSchema, SignUpSchema } from '@/app/sign-up/client/schema'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -40,17 +41,13 @@ import {
 	PopoverTrigger
 } from '@/components/ui/popover'
 
-import { i18nIsoCountries } from '@/lib/i18n-iso-countries'
 import { libPhoneNumber } from '@/lib/lib-phone-number'
-import { signUpSchema, SignUpSchema } from '@/lib/zod/sign-up'
+import { cn } from '@/lib/utils'
+import { countriesUtils } from '@/utils/countries'
 
-interface Props {
-	signUp(_: null, formData: FormData): Promise<null>
-}
-
-export function SignUpForm({ signUp }: Props) {
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState('')
+export function SignUpForm() {
+  const [isPhoneNumberModalOpen, setIsPhoneNumberModalOpen] = useState(false)
+  const [phoneNumberCountry, setPhoneNumberCountry] = useState(countriesUtils.getDefaultCountry())
 
   const [, dispatch] = useFormState(signUp, null)
 
@@ -60,8 +57,8 @@ export function SignUpForm({ signUp }: Props) {
 			firstName: '',
 			lastName: '',
 			email: '',
-			birthDate: null
-    }
+			phoneNumber: ''
+		}
   })
 
 	function onSubmit(data: SignUpSchema) {
@@ -71,6 +68,7 @@ export function SignUpForm({ signUp }: Props) {
 		formData.append('lastName', data.lastName)
 		formData.append('email', data.email)
 		formData.append('birthDate', data.birthDate.toISOString())
+		formData.append('phoneNumber', `+${data.phoneNumber}`)
 
 		dispatch(formData)
   }
@@ -162,7 +160,7 @@ export function SignUpForm({ signUp }: Props) {
 											<Button
 												variant='outline'
 												className={cn(
-													'w-[240px] pl-3 text-left font-normal',
+													'pl-3 text-left font-normal',
 													!field.value && 'text-muted-foreground'
 												)}
 											>
@@ -201,58 +199,90 @@ export function SignUpForm({ signUp }: Props) {
 						)}
 					/>
 
-					<div>
-						<Popover open={open} onOpenChange={setOpen}>
-							<PopoverTrigger asChild>
-								<Button
-									variant='outline'
-									role='combobox'
-									aria-expanded={open}
-									className='w-[200px] justify-between'
-								>
-									{/*TODO: default value will be current location flag*/}
-									{value
-										? getUnicodeFlagIcon(libPhoneNumber.countries.find((country) => country === value) ?? 'US')
-										: getUnicodeFlagIcon('US')}
-									<ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
-								</Button>
-							</PopoverTrigger>
+					<FormField
+						control={form.control}
+						name='phoneNumber'
+						render={({ field }) => (
+							<FormItem className='space-y-2 flex flex-col'>
+								<FormLabel>
+									Phone Number
+								</FormLabel>
 
-							<PopoverContent className='w-[200px] p-0'>
-								<Command>
-									<CommandInput placeholder='Search framework...' />
-									<CommandList>
-										<CommandEmpty>Country not found.</CommandEmpty>
+								<div className='flex'>
+									<Popover open={isPhoneNumberModalOpen} onOpenChange={setIsPhoneNumberModalOpen}>
+										<PopoverTrigger asChild>
+											<Button
+												variant='outline'
+												role='combobox'
+												aria-expanded={isPhoneNumberModalOpen}
+												className='gap-1 flex items-center border-r-0 rounded-r-none'
+											>
+												{/*TODO: default value will be current location flag*/}
+												{phoneNumberCountry
+													? getUnicodeFlagIcon(phoneNumberCountry.code)
+													: countriesUtils.getDefaultCountry().flag
+												}
+												<ChevronDown size={16} />
+											</Button>
+										</PopoverTrigger>
 
-										<CommandGroup>
-											{libPhoneNumber.countries.map((country) => (
-												<CommandItem
-													key={country}
-													value={country}
-													onSelect={(currentValue) => {
-														setValue(currentValue === value ? '' : currentValue)
-														setOpen(false)
-													}}
-												>
-													<Check
-														className={cn(
-															'mr-2 h-4 w-4',
-															value === country ? 'opacity-100' : 'opacity-0'
-														)}
-													/>
-													{getUnicodeFlagIcon(country)}
-													{i18nIsoCountries.getCountryName(country)}
-												</CommandItem>
-											))}
-										</CommandGroup>
-									</CommandList>
-								</Command>
-							</PopoverContent>
-						</Popover>
-					</div>
+										<PopoverContent className='w-48 p-0'>
+											<Command>
+												<CommandInput placeholder='Search country...' />
+												<CommandList>
+													<CommandEmpty>Country not found.</CommandEmpty>
+
+													<CommandGroup>
+														{countriesUtils.getCountries().map((country) => (
+															<CommandItem
+																key={country.name}
+																value={country.name}
+																onSelect={(currentValue) => {
+																	const selectedCountry = countriesUtils.getCountry(currentValue)
+
+																	setPhoneNumberCountry(currentValue === phoneNumberCountry.name ? countriesUtils.getDefaultCountry() : selectedCountry)
+																	setIsPhoneNumberModalOpen(false)
+																}}
+															>
+																<Check
+																	className={cn(
+																		'mr-2 h-4 w-4',
+																		phoneNumberCountry.name === country.name ? 'opacity-100' : 'opacity-0'
+																	)}
+																/>
+																<div className='gap-1 flex items-center'>
+																	<span>
+																		{country.flag}
+																	</span>
+																	<span>
+																		{country.name}
+																	</span>
+																</div>
+															</CommandItem>
+														))}
+													</CommandGroup>
+												</CommandList>
+											</Command>
+										</PopoverContent>
+									</Popover>
+
+									<FormControl>
+										<Input
+											placeholder={libPhoneNumber.countryPlaceholder(phoneNumberCountry.code)}
+											type='text'
+											className='border-l-0 rounded-l-none'
+											{...field}
+										/>
+									</FormControl>
+								</div>
+
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 				</div>
 
-				<Button type='submit' className='py-2 rounded-lg text-white bg-red-400 hover:bg-rose-600'>
+				<Button size='lg' type='submit'>
 					Sign up
 				</Button>
 

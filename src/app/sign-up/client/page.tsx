@@ -4,8 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Metadata } from 'next'
 
-import { signUp } from './actions'
-
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/logo'
 import { SignUpForm } from '@/components/sign-up-form'
@@ -55,7 +53,7 @@ export default function SignUp() {
 						<hr className='w-full border-gray-300 dark:border-gray-100' />
 					</div>
 
-					<SignUpForm signUp={signUp} />
+					<SignUpForm />
 				</div>
 			</main>
 

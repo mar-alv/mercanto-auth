@@ -36,7 +36,7 @@
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react-dom": "^18.3.0",
     "country-flag-icons": "^1.5.13",
     "eslint": "^8",
     "eslint-config-next": "14.2.7",
