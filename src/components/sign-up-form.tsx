@@ -202,20 +202,20 @@ export function SignUpForm() {
 					<FormField
 						control={form.control}
 						name='phoneNumber'
-						render={({ field }) => (
+						render={({ field, fieldState }) => (
 							<FormItem className='space-y-2 flex flex-col'>
 								<FormLabel>
 									Phone Number
 								</FormLabel>
 
-								<div className='flex'>
+								<div className='flex rounded-md focus-within:ring-1 focus-within:ring-ring'>
 									<Popover open={isPhoneNumberModalOpen} onOpenChange={setIsPhoneNumberModalOpen}>
 										<PopoverTrigger asChild>
 											<Button
 												variant='outline'
 												role='combobox'
 												aria-expanded={isPhoneNumberModalOpen}
-												className='gap-1 flex items-center border-r-0 rounded-r-none'
+												className='gap-1 flex items-center border-r-0 rounded-r-none focus:bg-accent'
 											>
 												{/*TODO: default value will be current location flag*/}
 												{phoneNumberCountry
@@ -239,8 +239,9 @@ export function SignUpForm() {
 																value={country.name}
 																onSelect={(currentValue) => {
 																	const selectedCountry = countriesUtils.getCountry(currentValue)
+																	const selectedTheSameCountry = currentValue === phoneNumberCountry.name
 
-																	setPhoneNumberCountry(currentValue === phoneNumberCountry.name ? countriesUtils.getDefaultCountry() : selectedCountry)
+																	setPhoneNumberCountry(selectedTheSameCountry ? countriesUtils.getDefaultCountry() : selectedCountry)
 																	setIsPhoneNumberModalOpen(false)
 																}}
 															>
@@ -270,7 +271,7 @@ export function SignUpForm() {
 										<Input
 											placeholder={libPhoneNumber.countryPlaceholder(phoneNumberCountry.code)}
 											type='text'
-											className='border-l-0 rounded-l-none'
+											className='border-l-0 rounded-l-none focus-visible:ring-0'
 											{...field}
 										/>
 									</FormControl>
